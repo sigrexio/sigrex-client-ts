@@ -17,7 +17,7 @@ A fully-typed, isomorphic, zero-dependency TypeScript API client for the **Sigre
 ## Installation
 
 ```bash
-npm install sigrex-client
+npm install @sigrex/client
 ```
 
 ---
@@ -27,7 +27,7 @@ npm install sigrex-client
 To get started, instantiate the `SigrexClient` using your public **API key** and private **API secret**. All HTTP requests are automatically signed and sent using native `fetch`.
 
 ```typescript
-import { SigrexClient } from 'sigrex-client';
+import { SigrexClient } from '@sigrex/client';
 
 const client = new SigrexClient({
   apiKey: 'YOUR_PUBLIC_API_KEY',
@@ -54,7 +54,7 @@ getExchanges();
 The Sigrex API supports post-quantum **ML-DSA44** signature authentication. You can provide a custom `signer` callback function to sign requests using `@oqs/liboqs-js` (or any other cryptographic engine) without adding heavy WebAssembly or native binaries to your core dependencies.
 
 ```typescript
-import { SigrexClient } from 'sigrex-client';
+import { SigrexClient } from '@sigrex/client';
 import { createMLDSA44 } from '@oqs/liboqs-js';
 
 const PRIVATE_KEY_B64 = 'YOUR_PRIVATE_KEY_BASE64';
@@ -158,7 +158,7 @@ Exposes key endpoints for managing third-party LLM and CEX keys securely.
 All failed HTTP requests (status code outside `2xx`) throw a `SigrexError`. You can inspect the error's status code, status message, and API-returned error details:
 
 ```typescript
-import { SigrexError } from 'sigrex-client';
+import { SigrexError } from '@sigrex/client';
 
 try {
   await client.strategies.llmSessions.delete('non-existent-id');
