@@ -1,0 +1,40 @@
+{
+  "name": "sigrex-client",
+  "version": "2.1.0",
+  "description": "TypeScript API Client for Sigrex with automatic HMAC-SHA256 request signing and support for ML-DSA44",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --clean",
+    "test": "node --import tsx --test tests/**/*.test.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "sigrex",
+    "api",
+    "client",
+    "sdk",
+    "hmac",
+    "ml-dsa44",
+    "typescript"
+  ],
+  "author": "Antigravity",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "tsup": "^8.0.1",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3"
+  }
+}
