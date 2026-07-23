@@ -8459,6 +8459,11 @@ export interface components {
              */
             symbol: string;
             /**
+             * @description Set how often the reaction will check for new signals. eg. 10 means 10 in 1 second
+             * @example 10
+             */
+            delay?: number;
+            /**
              * @description The JavaScript code of the strategy
              * @example (()=>{ $.Strategy.action($.Action.LONG); })();
              */
@@ -8505,6 +8510,11 @@ export interface components {
              * @example BTCUSDT,ETHUSDT
              */
             symbol: string;
+            /**
+             * @description Set how often the reaction will check for new signals. eg. 10 means 10 in 1 second
+             * @example 10
+             */
+            delay?: number;
             /**
              * @description The JavaScript code of the strategy
              * @example (()=>{ $.Strategy.action($.Action.LONG); })();
@@ -8558,6 +8568,11 @@ export interface components {
              */
             fallback_api_id?: number;
             /**
+             * @description Set how often the reaction will check for new signals. eg. 10 means 10 in 1 second
+             * @example 10
+             */
+            delay?: number;
+            /**
              * @description The prompt used for the strategy
              * @example Analyze the incoming data and give me a signal
              */
@@ -8609,6 +8624,11 @@ export interface components {
              * @example 15
              */
             fallback_api_id?: number;
+            /**
+             * @description Set how often the reaction will check for new signals. eg. 10 means 10 in 1 second
+             * @example 10
+             */
+            delay?: number;
             /**
              * @description The prompt used for the strategy
              * @example Analyze the incoming data and give me a signal
