@@ -8573,6 +8573,36 @@ export interface components {
              */
             delay?: number;
             /**
+             * @description Set true if you want to send chart image with the strategy prompt
+             * @example true
+             */
+            use_chart?: boolean;
+            /**
+             * @description The Tradingview symbol of the chart (required if use_chart is true)
+             * @example BINANCE:BTCUSDT
+             */
+            chart_symbol?: string;
+            /**
+             * @description The interval of the chart (required if use_chart is true)
+             * @example 5
+             * @enum {string}
+             */
+            chart_interval?: "1" | "3" | "5" | "15" | "30" | "60" | "120" | "240" | "D";
+            /**
+             * @description The studies of the chart (optional if use_chart is true)
+             * @example [
+             *       "RSI@tv-basicstudies",
+             *       "MACD@tv-basicstudies"
+             *     ]
+             */
+            chart_studies?: ("ACCD@tv-basicstudies" | "studyADR@tv-basicstudies" | "AROON@tv-basicstudies" | "ATR@tv-basicstudies" | "AwesomeOscillator@tv-basicstudies" | "BB@tv-basicstudies" | "BollingerBandsR@tv-basicstudies" | "BollingerBandsWidth@tv-basicstudies" | "CMF@tv-basicstudies" | "ChaikinOscillator@tv-basicstudies" | "chandeMO@tv-basicstudies" | "ChoppinessIndex@tv-basicstudies" | "CCI@tv-basicstudies" | "CRSI@tv-basicstudies" | "CorrelationCoefficient@tv-basicstudies" | "DetrendedPriceOscillator@tv-basicstudies" | "DM@tv-basicstudies" | "DONCH@tv-basicstudies" | "DoubleEMA@tv-basicstudies" | "EaseOfMovement@tv-basicstudies" | "EFI@tv-basicstudies" | "ENV@tv-basicstudies" | "FisherTransform@tv-basicstudies" | "HV@tv-basicstudies" | "hullMA@tv-basicstudies" | "IchimokuCloud@tv-basicstudies" | "KLTNR@tv-basicstudies" | "KST@tv-basicstudies" | "LinearRegression@tv-basicstudies" | "MACD@tv-basicstudies" | "MOM@tv-basicstudies" | "MF@tv-basicstudies" | "MoonPhases@tv-basicstudies" | "MASimple@tv-basicstudies" | "MAExp@tv-basicstudies" | "MAWeighted@tv-basicstudies" | "OBV@tv-basicstudies" | "PSAR@tv-basicstudies" | "PivotPointsHighLow@tv-basicstudies" | "PivotPointsStandard@tv-basicstudies" | "PriceOsc@tv-basicstudies" | "PriceVolumeTrend@tv-basicstudies" | "ROC@tv-basicstudies" | "RSI@tv-basicstudies" | "VigorIndex@tv-basicstudies" | "VolatilityIndex@tv-basicstudies" | "SMIErgodicIndicator@tv-basicstudies" | "SMIErgodicOscillator@tv-basicstudies" | "Stochastic@tv-basicstudies" | "StochasticRSI@tv-basicstudies" | "TripleEMA@tv-basicstudies" | "Trix@tv-basicstudies" | "UltimateOsc@tv-basicstudies" | "VSTOP@tv-basicstudies" | "Volume@tv-basicstudies" | "VWAP@tv-basicstudies" | "MAVolumeWeighted@tv-basicstudies" | "WilliamR@tv-basicstudies" | "WilliamsAlligator@tv-basicstudies" | "WilliamsFractal@tv-basicstudies" | "ZigZag@tv-basicstudies")[];
+            /**
+             * @description The data range of the chart (optional if use_chart is true)
+             * @example 1D
+             * @enum {string}
+             */
+            chart_data_range?: "1D" | "5D" | "1M" | "3M" | "6M" | "YTD" | "12M" | "60M" | "ALL";
+            /**
              * @description The prompt used for the strategy
              * @example Analyze the incoming data and give me a signal
              */
@@ -8629,6 +8659,36 @@ export interface components {
              * @example 10
              */
             delay?: number;
+            /**
+             * @description Set true if you want to send chart image with the strategy prompt
+             * @example true
+             */
+            use_chart?: boolean;
+            /**
+             * @description The Tradingview symbol of the chart (required if use_chart is true)
+             * @example BINANCE:BTCUSDT
+             */
+            chart_symbol?: string;
+            /**
+             * @description The interval of the chart (required if use_chart is true)
+             * @example 5
+             * @enum {string}
+             */
+            chart_interval?: "1" | "3" | "5" | "15" | "30" | "60" | "120" | "240" | "D";
+            /**
+             * @description The studies of the chart (optional if use_chart is true)
+             * @example [
+             *       "RSI@tv-basicstudies",
+             *       "MACD@tv-basicstudies"
+             *     ]
+             */
+            chart_studies?: ("ACCD@tv-basicstudies" | "studyADR@tv-basicstudies" | "AROON@tv-basicstudies" | "ATR@tv-basicstudies" | "AwesomeOscillator@tv-basicstudies" | "BB@tv-basicstudies" | "BollingerBandsR@tv-basicstudies" | "BollingerBandsWidth@tv-basicstudies" | "CMF@tv-basicstudies" | "ChaikinOscillator@tv-basicstudies" | "chandeMO@tv-basicstudies" | "ChoppinessIndex@tv-basicstudies" | "CCI@tv-basicstudies" | "CRSI@tv-basicstudies" | "CorrelationCoefficient@tv-basicstudies" | "DetrendedPriceOscillator@tv-basicstudies" | "DM@tv-basicstudies" | "DONCH@tv-basicstudies" | "DoubleEMA@tv-basicstudies" | "EaseOfMovement@tv-basicstudies" | "EFI@tv-basicstudies" | "ENV@tv-basicstudies" | "FisherTransform@tv-basicstudies" | "HV@tv-basicstudies" | "hullMA@tv-basicstudies" | "IchimokuCloud@tv-basicstudies" | "KLTNR@tv-basicstudies" | "KST@tv-basicstudies" | "LinearRegression@tv-basicstudies" | "MACD@tv-basicstudies" | "MOM@tv-basicstudies" | "MF@tv-basicstudies" | "MoonPhases@tv-basicstudies" | "MASimple@tv-basicstudies" | "MAExp@tv-basicstudies" | "MAWeighted@tv-basicstudies" | "OBV@tv-basicstudies" | "PSAR@tv-basicstudies" | "PivotPointsHighLow@tv-basicstudies" | "PivotPointsStandard@tv-basicstudies" | "PriceOsc@tv-basicstudies" | "PriceVolumeTrend@tv-basicstudies" | "ROC@tv-basicstudies" | "RSI@tv-basicstudies" | "VigorIndex@tv-basicstudies" | "VolatilityIndex@tv-basicstudies" | "SMIErgodicIndicator@tv-basicstudies" | "SMIErgodicOscillator@tv-basicstudies" | "Stochastic@tv-basicstudies" | "StochasticRSI@tv-basicstudies" | "TripleEMA@tv-basicstudies" | "Trix@tv-basicstudies" | "UltimateOsc@tv-basicstudies" | "VSTOP@tv-basicstudies" | "Volume@tv-basicstudies" | "VWAP@tv-basicstudies" | "MAVolumeWeighted@tv-basicstudies" | "WilliamR@tv-basicstudies" | "WilliamsAlligator@tv-basicstudies" | "WilliamsFractal@tv-basicstudies" | "ZigZag@tv-basicstudies")[];
+            /**
+             * @description The data range of the chart (optional if use_chart is true)
+             * @example 1D
+             * @enum {string}
+             */
+            chart_data_range?: "1D" | "5D" | "1M" | "3M" | "6M" | "YTD" | "12M" | "60M" | "ALL";
             /**
              * @description The prompt used for the strategy
              * @example Analyze the incoming data and give me a signal
