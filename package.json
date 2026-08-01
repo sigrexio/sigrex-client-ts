@@ -1,6 +1,6 @@
 {
   "name": "@sigrex/client",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "TypeScript API Client for Sigrex with automatic HMAC-SHA256 request signing and support for ML-DSA44",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
