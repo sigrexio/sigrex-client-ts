@@ -7989,10 +7989,15 @@ export interface components {
              */
             api_id: number;
             /**
-             * @description The market url
+             * @description Set to true to specify a market slug dynamically within the signal payload.
+             * @example true
+             */
+            slug_from_signal: boolean;
+            /**
+             * @description The market url (required if slug_from_signal is false)
              * @example https://polymarket.com/event/elon-musk-of-tweets-april-21-april-28/elon-musk-of-tweets-april-21-april-28-180-199#xpkQ2pz
              */
-            url: string;
+            url?: string;
             /**
              * @description Set if amount is coming from signal
              * @example false
@@ -8031,10 +8036,15 @@ export interface components {
              */
             api_id: number;
             /**
-             * @description The market url
+             * @description Set to true to specify a market slug dynamically within the signal payload.
+             * @example true
+             */
+            slug_from_signal: boolean;
+            /**
+             * @description The market url (required if slug_from_signal is false)
              * @example https://polymarket.com/event/elon-musk-of-tweets-april-21-april-28/elon-musk-of-tweets-april-21-april-28-180-199#xpkQ2pz
              */
-            url: string;
+            url?: string;
             /**
              * @description Set if amount is coming from signal
              * @example false
