@@ -1,10 +1,16 @@
 const fs = require('fs');
 const path = require('path');
 
-const content = fs.readFileSync('C:\\Users\\kulio\\.gemini\\antigravity\\brain\\b4f9b288-f2ea-4808-8d1b-0ebcd8a3d02b\\.system_generated\\steps\\3\\content.md', 'utf8');
-const jsonStart = content.indexOf('{', content.indexOf('---'));
-const jsonStr = content.slice(jsonStart);
-const spec = JSON.parse(jsonStr);
+const inputArg = process.argv[2];
+let spec;
+if (inputArg) {
+  spec = JSON.parse(fs.readFileSync(inputArg, 'utf8'));
+} else {
+  const content = fs.readFileSync('C:\\Users\\kulio\\.gemini\\antigravity\\brain\\b4f9b288-f2ea-4808-8d1b-0ebcd8a3d02b\\.system_generated\\steps\\3\\content.md', 'utf8');
+  const jsonStart = content.indexOf('{', content.indexOf('---'));
+  const jsonStr = content.slice(jsonStart);
+  spec = JSON.parse(jsonStr);
+}
 
 if (!spec.components) {
   spec.components = {};
