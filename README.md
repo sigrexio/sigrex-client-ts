@@ -17,7 +17,17 @@ A fully-typed, isomorphic, zero-dependency TypeScript API client for the **Sigre
 ## Installation
 
 ```bash
+# npm
 npm install @sigrex/client
+
+# Deno
+deno add @sigrex/client
+```
+
+When using Deno, import directly from the JSR scope:
+
+```typescript
+import { SigrexClient } from "jsr:@sigrex/client";
 ```
 
 ---
