@@ -8175,15 +8175,20 @@ export interface components {
              */
             folder_id?: number;
             /**
-             * @description The id of the bot hook where signal will be sent
+             * @description Set true to enable signal generation
+             * @example true
+             */
+            send_signal?: boolean;
+            /**
+             * @description The id of the bot hook where signal will be sent (required if send_signal is true)
              * @example 12
              */
-            webhook_id: number;
+            webhook_id?: number;
             /**
-             * @description The signal symbol or symbols of the strategy separated by comma
+             * @description The signal symbol or symbols of the strategy separated by comma (required if send_signal is true)
              * @example BTCUSDT,ETHUSDT
              */
-            symbol: string;
+            symbol?: string;
             /**
              * @description The JavaScript code of the strategy
              * @example (()=>{ $.Strategy.action($.Action.LONG); })();
@@ -8217,15 +8222,20 @@ export interface components {
              */
             folder_id?: number;
             /**
-             * @description The id of the bot hook where signal will be sent
+             * @description Set true to enable signal generation
+             * @example true
+             */
+            send_signal?: boolean;
+            /**
+             * @description The id of the bot hook where signal will be sent (required if send_signal is true)
              * @example 12
              */
-            webhook_id: number;
+            webhook_id?: number;
             /**
-             * @description The signal symbol or symbols of the strategy separated by comma
+             * @description The signal symbol or symbols of the strategy separated by comma (required if send_signal is true)
              * @example BTCUSDT,ETHUSDT
              */
-            symbol: string;
+            symbol?: string;
             /**
              * @description The JavaScript code of the strategy
              * @example (()=>{ $.Strategy.action($.Action.LONG); })();
@@ -8454,20 +8464,25 @@ export interface components {
              */
             folder_id?: number;
             /**
-             * @description The id of the bot hook where signal will be sent
-             * @example 12
-             */
-            webhook_id: number;
-            /**
              * @description The id of the data hook witch will be used to get data
              * @example 13
              */
             data_webhook_id: number;
             /**
-             * @description The signal symbol or symbols of the strategy separated by comma
+             * @description Set true to enable signal generation
+             * @example true
+             */
+            send_signal?: boolean;
+            /**
+             * @description The id of the bot hook where signal will be sent (required if send_signal is true)
+             * @example 12
+             */
+            webhook_id?: number;
+            /**
+             * @description The signal symbol or symbols of the strategy separated by comma (required if send_signal is true)
              * @example BTCUSDT,ETHUSDT
              */
-            symbol: string;
+            symbol?: string;
             /**
              * @description Set how often the reaction will check for new signals. eg. 10 means 10 in 1 second
              * @example 10
@@ -8506,20 +8521,25 @@ export interface components {
              */
             folder_id?: number;
             /**
-             * @description The id of the bot hook where signal will be sent
-             * @example 12
-             */
-            webhook_id: number;
-            /**
              * @description The id of the data hook witch will be used to get data
              * @example 13
              */
             data_webhook_id: number;
             /**
-             * @description The signal symbol or symbols of the strategy separated by comma
+             * @description Set true to enable signal generation
+             * @example true
+             */
+            send_signal?: boolean;
+            /**
+             * @description The id of the bot hook where signal will be sent (required if send_signal is true)
+             * @example 12
+             */
+            webhook_id?: number;
+            /**
+             * @description The signal symbol or symbols of the strategy separated by comma (required if send_signal is true)
              * @example BTCUSDT,ETHUSDT
              */
-            symbol: string;
+            symbol?: string;
             /**
              * @description Set how often the reaction will check for new signals. eg. 10 means 10 in 1 second
              * @example 10
