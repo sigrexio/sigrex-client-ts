@@ -3945,7 +3945,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v2/bot/signal/prediction/market/{slug}": {
+    "/api/v2/bot/signal/prediction/market/{exchange}/{slug}": {
         parameters: {
             query?: never;
             header?: never;
@@ -3958,6 +3958,8 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Prediction market exchange */
+                    exchange: string;
                     slug: string;
                 };
                 cookie?: never;
