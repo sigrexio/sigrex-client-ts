@@ -8090,7 +8090,7 @@ export interface components {
              * @description The key of the bot hook
              * @example 23n9c22c2vjk2cjn2opv8l2vhi
              */
-            has_key?: string;
+            hash_key?: string;
         };
         UpdateBotWebhookRequest: {
             /**
@@ -8112,7 +8112,7 @@ export interface components {
              * @description The key of the bot hook
              * @example 23n9c22c2vjk2cjn2opv8l2vhi
              */
-            has_key?: string;
+            hash_key?: string;
         };
         CreateDataWebhookRequest: {
             /**
@@ -8134,7 +8134,7 @@ export interface components {
              * @description The key of the data hook
              * @example 23n9c22c2vjk2cjn2opv8l2vhi
              */
-            has_key?: string;
+            hash_key?: string;
         };
         UpdateDataWebhookRequest: {
             /**
@@ -8156,7 +8156,7 @@ export interface components {
              * @description The key of the data hook
              * @example 23n9c22c2vjk2cjn2opv8l2vhi
              */
-            has_key?: string;
+            hash_key?: string;
         };
         UpdatePublicRequest: {
             /**
