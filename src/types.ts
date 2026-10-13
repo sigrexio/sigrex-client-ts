@@ -1072,6 +1072,45 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v2/strategy/reaction/llm/total": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get the total number of LLM Reaction */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Number of LLM Reactions */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            /** @example 10 */
+                            total?: number;
+                        };
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v2/strategy/reaction/llm/{id}": {
         parameters: {
             query?: never;
@@ -1207,45 +1246,6 @@ export interface paths {
                 };
             };
         };
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v2/strategy/reaction/llm/total": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get the total number of LLM Reaction */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Number of LLM Reactions */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": {
-                            /** @example 10 */
-                            total?: number;
-                        };
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -5711,6 +5711,7 @@ export interface paths {
             parameters: {
                 query: {
                     page: number;
+                    /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
                 };
                 header?: never;
@@ -5761,6 +5762,7 @@ export interface paths {
             parameters: {
                 query: {
                     page: number;
+                    /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
                 };
                 header?: never;
@@ -5811,6 +5813,7 @@ export interface paths {
             parameters: {
                 query: {
                     page: number;
+                    /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
                 };
                 header?: never;
@@ -6361,6 +6364,7 @@ export interface paths {
             parameters: {
                 query: {
                     page: number;
+                    /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
                 };
                 header?: never;
@@ -6411,6 +6415,7 @@ export interface paths {
             parameters: {
                 query: {
                     page: number;
+                    /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
                 };
                 header?: never;
@@ -6863,6 +6868,7 @@ export interface paths {
             parameters: {
                 query: {
                     page: number;
+                    /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
                 };
                 header?: never;
@@ -7442,6 +7448,7 @@ export interface paths {
             parameters: {
                 query: {
                     page: number;
+                    /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
                 };
                 header?: never;
@@ -7651,6 +7658,995 @@ export interface paths {
                 };
             };
         };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/account/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get the authenticated user's account */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The authenticated user's account with package and subscription details */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Account"];
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/account/friend/all/{status}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get all friendships by status
+         * @description Returns every friendship of the authenticated user with the given status, both sent and received.
+         */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description Friendship status */
+                    status: "pending" | "accepted" | "rejected";
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description List of friendships */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["Friend"][];
+                    };
+                };
+                /** @description Invalid status */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/account/friend/{status}/{side}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get paginated friendships by status and side */
+        get: {
+            parameters: {
+                query: {
+                    page: number;
+                    /** @description Page size, max 100 (larger values are capped to 100) */
+                    limit: number;
+                };
+                header?: never;
+                path: {
+                    /** @description Friendship status */
+                    status: "pending" | "accepted" | "rejected";
+                    /** @description Requests sent by the user, received by the user, or both */
+                    side: "sent" | "received" | "both";
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Paginated list of friendships */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            total?: number;
+                            data?: components["schemas"]["Friend"][];
+                        };
+                    };
+                };
+                /** @description Invalid status or side, or missing or invalid page or limit */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/account/friend/rejected": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Get paginated rejected friend requests
+         * @description Returns friend requests received by the authenticated user that were rejected.
+         */
+        get: {
+            parameters: {
+                query: {
+                    page: number;
+                    /** @description Page size, max 100 (larger values are capped to 100) */
+                    limit: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Paginated list of rejected friend requests */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            total?: number;
+                            data?: components["schemas"]["Friend"][];
+                        };
+                    };
+                };
+                /** @description Missing or invalid page or limit */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/log/signal/paginated": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get paginated signal logs */
+        get: {
+            parameters: {
+                query: {
+                    page: number;
+                    /** @description Page size, max 100 (larger values are capped to 100) */
+                    limit: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Paginated list of signal logs */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            total?: number;
+                            data?: components["schemas"]["SignalLog"][];
+                        };
+                    };
+                };
+                /** @description Missing or invalid page or limit */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/log/signal/hook/{hookId}/paginated": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get paginated signal logs of a bot hook */
+        get: {
+            parameters: {
+                query: {
+                    page: number;
+                    /** @description Page size, max 100 (larger values are capped to 100) */
+                    limit: number;
+                };
+                header?: never;
+                path: {
+                    /** @description Bot hook id */
+                    hookId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Paginated list of signal logs of the bot hook */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            total?: number;
+                            data?: components["schemas"]["SignalLog"][];
+                        };
+                    };
+                };
+                /** @description Missing hookId, or missing or invalid page or limit */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Hook not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/log/signal/{source}/paginated": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get paginated signal logs by source */
+        get: {
+            parameters: {
+                query: {
+                    page: number;
+                    /** @description Page size, max 100 (larger values are capped to 100) */
+                    limit: number;
+                };
+                header?: never;
+                path: {
+                    /** @description Signal source */
+                    source: "webhook" | "email" | "telegram" | "llm-session" | "code-strategy" | "llm-reaction" | "code-reaction";
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Paginated list of signal logs from the given source */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            total?: number;
+                            data?: components["schemas"]["SignalLog"][];
+                        };
+                    };
+                };
+                /** @description Missing or invalid source, or missing or invalid page or limit */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/log/signal/{source}/{id}/paginated": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get paginated signal logs by source and source id */
+        get: {
+            parameters: {
+                query: {
+                    page: number;
+                    /** @description Page size, max 100 (larger values are capped to 100) */
+                    limit: number;
+                };
+                header?: never;
+                path: {
+                    /** @description Signal source */
+                    source: "webhook" | "email" | "telegram" | "llm-session" | "code-strategy" | "llm-reaction" | "code-reaction";
+                    /** @description Id of the signal source */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Paginated list of signal logs from the given source id */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            total?: number;
+                            data?: components["schemas"]["SignalLog"][];
+                        };
+                    };
+                };
+                /** @description Missing or invalid source, missing id, or missing or invalid page or limit */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/log/transaction": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get paginated transaction logs */
+        get: {
+            parameters: {
+                query: {
+                    page: number;
+                    /** @description Page size, max 100 (larger values are capped to 100) */
+                    limit: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Paginated list of transaction logs */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            total?: number;
+                            data?: components["schemas"]["TransactionLog"][];
+                        };
+                    };
+                };
+                /** @description Missing or invalid page or limit */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/log/transaction/bot/signal/{type}/{service}/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get paginated transaction logs of a signal bot */
+        get: {
+            parameters: {
+                query: {
+                    page: number;
+                    /** @description Page size, max 100 (larger values are capped to 100) */
+                    limit: number;
+                };
+                header?: never;
+                path: {
+                    /** @description Exchange type */
+                    type: "cex" | "dex";
+                    /** @description Exchange service */
+                    service: "spot" | "futures" | "stock" | "prediction";
+                    /** @description Signal bot id */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Paginated list of transaction logs of the signal bot */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            total?: number;
+                            data?: components["schemas"]["TransactionLog"][];
+                        };
+                    };
+                };
+                /** @description Missing id, invalid type or service, or missing or invalid page or limit */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/log/transaction/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get a transaction log by id */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description Transaction log id */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The transaction log */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["TransactionLog"];
+                    };
+                };
+                /** @description Missing transaction log id */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Transaction log not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/log/data/paginated": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get paginated data logs */
+        get: {
+            parameters: {
+                query: {
+                    page: number;
+                    /** @description Page size, max 100 (larger values are capped to 100) */
+                    limit: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Paginated list of data logs */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            total?: number;
+                            data?: components["schemas"]["DataLog"][];
+                        };
+                    };
+                };
+                /** @description Missing or invalid page or limit */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/log/data/hook/{hookId}/paginated": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get paginated data logs of a data hook */
+        get: {
+            parameters: {
+                query: {
+                    page: number;
+                    /** @description Page size, max 100 (larger values are capped to 100) */
+                    limit: number;
+                };
+                header?: never;
+                path: {
+                    /** @description Data hook id */
+                    hookId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Paginated list of data logs of the data hook */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            total?: number;
+                            data?: components["schemas"]["DataLog"][];
+                        };
+                    };
+                };
+                /** @description Missing hookId, or missing or invalid page or limit */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Hook not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/log/error/paginated": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get paginated error logs */
+        get: {
+            parameters: {
+                query: {
+                    page: number;
+                    /** @description Page size, max 100 (larger values are capped to 100) */
+                    limit: number;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Paginated list of error logs */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            total?: number;
+                            data?: components["schemas"]["ErrorLog"][];
+                        };
+                    };
+                };
+                /** @description Missing or invalid page or limit */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/log/error/{source}/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get paginated error logs by source and source id */
+        get: {
+            parameters: {
+                query: {
+                    page: number;
+                    /** @description Page size, max 100 (larger values are capped to 100) */
+                    limit: number;
+                };
+                header?: never;
+                path: {
+                    /** @description Error source */
+                    source: "llm-session" | "code-strategy" | "llm-reaction" | "code-reaction" | "data-hook" | "bot-hook" | "invoice";
+                    /** @description Id of the error source */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Paginated list of error logs of the given source id */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": {
+                            total?: number;
+                            data?: components["schemas"]["ErrorLog"][];
+                        };
+                    };
+                };
+                /** @description Missing id, invalid source, or missing or invalid page or limit */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v2/log/error/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get an error log by id */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description Error log id */
+                    id: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description The error log */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorLog"];
+                    };
+                };
+                /** @description Missing error log id */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Error log not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Internal server error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -8009,7 +9005,7 @@ export interface components {
              * @description The amount of the bot in USDC (if amount_from_signal is false)
              * @example 100
              */
-            amount: number;
+            amount?: number;
             /**
              * @description Set how often the bot will check for new signals. eg. 10 means 10 in 1 second
              * @example 10
@@ -8056,7 +9052,7 @@ export interface components {
              * @description The amount of the bot in USDC (if amount_from_signal is false)
              * @example 100
              */
-            amount: number;
+            amount?: number;
             /**
              * @description Set how often the bot will check for new signals. eg. 10 means 10 in 1 second
              * @example 10
@@ -8913,6 +9909,30 @@ export interface components {
         };
         /** @description Stub schema for missing ref PredictionApiKey */
         PredictionApiKey: {
+            [key: string]: unknown;
+        };
+        /** @description Stub schema for missing ref Account */
+        Account: {
+            [key: string]: unknown;
+        };
+        /** @description Stub schema for missing ref Friend */
+        Friend: {
+            [key: string]: unknown;
+        };
+        /** @description Stub schema for missing ref SignalLog */
+        SignalLog: {
+            [key: string]: unknown;
+        };
+        /** @description Stub schema for missing ref TransactionLog */
+        TransactionLog: {
+            [key: string]: unknown;
+        };
+        /** @description Stub schema for missing ref DataLog */
+        DataLog: {
+            [key: string]: unknown;
+        };
+        /** @description Stub schema for missing ref ErrorLog */
+        ErrorLog: {
             [key: string]: unknown;
         };
     };

@@ -33,7 +33,7 @@ export class ExchangesService {
   /**
    * Get all DEX exchanges by chain ID
    */
-  async getDex(chain: string | number): Promise<paths['/api/v2/exchange/dex/{chain}']['get']['responses']['200']['content']['application/json']> {
+  async listDex(chain: string | number): Promise<paths['/api/v2/exchange/dex/{chain}']['get']['responses']['200']['content']['application/json']> {
     return this.client.request<paths['/api/v2/exchange/dex/{chain}']['get']['responses']['200']['content']['application/json']>({
       method: 'GET',
       path: `/api/v2/exchange/dex/${chain}`,

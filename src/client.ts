@@ -12,6 +12,11 @@ import { DataWebhooksService } from './services/dataWebhooks.js';
 import { ExchangeApiKeysService } from './services/exchangeApiKeys.js';
 import { LlmApiKeysService } from './services/llmApiKeys.js';
 import { PredictionApiKeysService } from './services/predictionApiKeys.js';
+import { AccountService } from './services/account.js';
+import { SignalLogsService } from './services/signalLogs.js';
+import { TransactionLogsService } from './services/transactionLogs.js';
+import { DataLogsService } from './services/dataLogs.js';
+import { ErrorLogsService } from './services/errorLogs.js';
 
 export interface SigrexClientOptions {
   /**
@@ -197,5 +202,14 @@ export class SigrexClient extends SigrexBaseClient {
     exchange: new ExchangeApiKeysService(this),
     llm: new LlmApiKeysService(this),
     prediction: new PredictionApiKeysService(this),
+  };
+
+  public account = new AccountService(this);
+
+  public logs = {
+    signal: new SignalLogsService(this),
+    transaction: new TransactionLogsService(this),
+    data: new DataLogsService(this),
+    error: new ErrorLogsService(this),
   };
 }

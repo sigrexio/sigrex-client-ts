@@ -72,7 +72,7 @@ export class BotWebhooksService {
   /**
    * Get webhook shares
    */
-  async shares(id: string | number): Promise<paths['/api/v2/webhook/bot/{id}/shares']['get']['responses']['200']['content']['application/json']> {
+  async listShares(id: string | number): Promise<paths['/api/v2/webhook/bot/{id}/shares']['get']['responses']['200']['content']['application/json']> {
     return this.client.request<paths['/api/v2/webhook/bot/{id}/shares']['get']['responses']['200']['content']['application/json']>({
       method: 'GET',
       path: `/api/v2/webhook/bot/${id}/shares`,
@@ -85,7 +85,7 @@ export class BotWebhooksService {
   /**
    * Share webhook with user
    */
-  async (id: string | number, body: NonNullable<paths['/api/v2/webhook/bot/share/{id}']['post']['requestBody']>['content']['application/json']): Promise<paths['/api/v2/webhook/bot/share/{id}']['post']['responses']['201']['content']['application/json']> {
+  async createShare(id: string | number, body: NonNullable<paths['/api/v2/webhook/bot/share/{id}']['post']['requestBody']>['content']['application/json']): Promise<paths['/api/v2/webhook/bot/share/{id}']['post']['responses']['201']['content']['application/json']> {
     return this.client.request<paths['/api/v2/webhook/bot/share/{id}']['post']['responses']['201']['content']['application/json']>({
       method: 'POST',
       path: `/api/v2/webhook/bot/share/${id}`,
@@ -176,7 +176,7 @@ export class BotWebhooksService {
   /**
    * Get webhooks shared with specific user
    */
-  async getWithShared(id: string | number): Promise<paths['/api/v2/webhook/bot/shared/with/{id}']['get']['responses']['200']['content']['application/json']> {
+  async listWithShared(id: string | number): Promise<paths['/api/v2/webhook/bot/shared/with/{id}']['get']['responses']['200']['content']['application/json']> {
     return this.client.request<paths['/api/v2/webhook/bot/shared/with/{id}']['get']['responses']['200']['content']['application/json']>({
       method: 'GET',
       path: `/api/v2/webhook/bot/shared/with/${id}`,
@@ -189,7 +189,7 @@ export class BotWebhooksService {
   /**
    * Get webhooks shared by specific user
    */
-  async getByShared(id: string | number): Promise<paths['/api/v2/webhook/bot/shared/by/{id}']['get']['responses']['200']['content']['application/json']> {
+  async listByShared(id: string | number): Promise<paths['/api/v2/webhook/bot/shared/by/{id}']['get']['responses']['200']['content']['application/json']> {
     return this.client.request<paths['/api/v2/webhook/bot/shared/by/{id}']['get']['responses']['200']['content']['application/json']>({
       method: 'GET',
       path: `/api/v2/webhook/bot/shared/by/${id}`,

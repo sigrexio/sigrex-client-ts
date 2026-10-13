@@ -103,7 +103,7 @@ async function getLLMSessions() {
 
 ## API Reference
 
-The client exposes nested namespaces to make finding endpoints easy and intuitive:
+The client exposes nested namespaces to make finding endpoints easy and intuitive. Methods that return a list (or a paginated `{ total, data }` result) start with `list`, and methods that return a single item start with `get`:
 
 ### 1. Exchanges
 
@@ -111,7 +111,7 @@ Exposes CEX, DEX, and Prediction exchanges.
 
 - `client.exchanges.list(queryParams?)`
 - `client.exchanges.listCex()`
-- `client.exchanges.getDex(chain)`
+- `client.exchanges.listDex(chain)`
 - `client.exchanges.listPrediction()`
 - `client.exchanges.listWithExchangeRate()`
 
@@ -160,6 +160,50 @@ Exposes key endpoints for managing third-party LLM and CEX keys securely.
 - **Exchange Keys**: `client.apiKeys.exchange.list()`, `client.apiKeys.exchange.create()`, etc.
 - **LLM Keys**: `client.apiKeys.llm.list()`, `client.apiKeys.llm.create()`, etc.
 - **Prediction Keys**: `client.apiKeys.prediction.list()`, `client.apiKeys.prediction.create()`, etc.
+
+### 6. Account
+
+Exposes the authenticated user's account and friendships.
+
+- `client.account.getMe()` (Account with package and subscription details)
+- `client.account.listAllFriend(status)` (All friendships, sent and received)
+- `client.account.listFriend(status, side, { page, limit })` (Paginated)
+- `client.account.listFriendRejected({ page, limit })` (Paginated, received requests that were rejected)
+
+`status` is one of `'pending' | 'accepted' | 'rejected'`; `side` is one of `'sent' | 'received' | 'both'`.
+
+### 7. Logs
+
+Exposes signal, transaction, data, and error logs. Every method except `get(id)` is paginated: `page` (starting at 1) and `limit` are required (`limit` is capped at 100), and the response is `{ total, data }`.
+
+- **Signal Logs**:
+  - `client.logs.signal.list({ page, limit })`
+  - `client.logs.signal.listHook(hookId, { page, limit })` (Bot hook)
+  - `client.logs.signal.listBySource(source, { page, limit })`
+  - `client.logs.signal.listBySourceAndId(source, id, { page, limit })`
+  - `source`: `'webhook' | 'email' | 'telegram' | 'llm-session' | 'code-strategy' | 'llm-reaction' | 'code-reaction'`
+- **Transaction Logs**:
+  - `client.logs.transaction.list({ page, limit })`
+  - `client.logs.transaction.listSignalBot(type, service, id, { page, limit })` (Signal bot)
+  - `client.logs.transaction.get(id)`
+  - `type`: `'cex' | 'dex'`; `service`: `'spot' | 'futures' | 'stock' | 'prediction'`
+- **Data Logs**:
+  - `client.logs.data.list({ page, limit })`
+  - `client.logs.data.listHook(hookId, { page, limit })` (Data hook)
+- **Error Logs**:
+  - `client.logs.error.list({ page, limit })`
+  - `client.logs.error.listBySourceAndId(source, id, { page, limit })`
+  - `client.logs.error.get(id)`
+  - `source`: `'llm-session' | 'code-strategy' | 'llm-reaction' | 'code-reaction' | 'data-hook' | 'bot-hook' | 'invoice'`
+
+```typescript
+// Example: Page through the signal logs of an LLM session
+const { total, data } = await client.logs.signal.listBySourceAndId('llm-session', 'SESSION_ID', {
+  page: 1,
+  limit: 50,
+});
+console.log(`Showing ${data?.length} of ${total} signal logs`);
+```
 
 ---
 

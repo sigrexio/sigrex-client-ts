@@ -161,3 +161,93 @@ test('SigrexClient HTTP and Signing Middleware', async (t) => {
     );
   });
 });
+
+test('Account and Logs routes', async (t) => {
+  const requests: { method: string; url: string }[] = [];
+
+  const mockFetch = (async (url: string, options: any) => {
+    requests.push({ method: options.method, url });
+    return {
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+      headers: new Map([['content-type', 'application/json']]),
+      json: async () => ({ total: 0, data: [] })
+    } as any;
+  }) as typeof fetch;
+
+  const client = new SigrexClient({
+    apiKey: 'test-api-key',
+    apiSecret: 'test-api-secret',
+    fetch: mockFetch
+  });
+
+  const cases: [string, () => Promise<unknown>, string][] = [
+    ['account.getMe', () => client.account.getMe(), '/api/v2/account/me'],
+    ['account.listAllFriend', () => client.account.listAllFriend('accepted'), '/api/v2/account/friend/all/accepted'],
+    ['account.listFriend', () => client.account.listFriend('pending', 'received', { page: 1, limit: 20 }), '/api/v2/account/friend/pending/received?page=1&limit=20'],
+    ['account.listFriendRejected', () => client.account.listFriendRejected({ page: 2, limit: 10 }), '/api/v2/account/friend/rejected?page=2&limit=10'],
+    ['logs.signal.list', () => client.logs.signal.list({ page: 1, limit: 50 }), '/api/v2/log/signal/paginated?page=1&limit=50'],
+    ['logs.signal.listHook', () => client.logs.signal.listHook('hook-1', { page: 1, limit: 50 }), '/api/v2/log/signal/hook/hook-1/paginated?page=1&limit=50'],
+    ['logs.signal.listBySource', () => client.logs.signal.listBySource('telegram', { page: 1, limit: 50 }), '/api/v2/log/signal/telegram/paginated?page=1&limit=50'],
+    ['logs.signal.listBySourceAndId', () => client.logs.signal.listBySourceAndId('llm-session', 'abc', { page: 1, limit: 50 }), '/api/v2/log/signal/llm-session/abc/paginated?page=1&limit=50'],
+    ['logs.transaction.list', () => client.logs.transaction.list({ page: 1, limit: 50 }), '/api/v2/log/transaction?page=1&limit=50'],
+    ['logs.transaction.listSignalBot', () => client.logs.transaction.listSignalBot('cex', 'futures', 'bot-1', { page: 1, limit: 50 }), '/api/v2/log/transaction/bot/signal/cex/futures/bot-1?page=1&limit=50'],
+    ['logs.transaction.get', () => client.logs.transaction.get('tx-1'), '/api/v2/log/transaction/tx-1'],
+    ['logs.data.list', () => client.logs.data.list({ page: 1, limit: 50 }), '/api/v2/log/data/paginated?page=1&limit=50'],
+    ['logs.data.listHook', () => client.logs.data.listHook('hook-2', { page: 1, limit: 50 }), '/api/v2/log/data/hook/hook-2/paginated?page=1&limit=50'],
+    ['logs.error.list', () => client.logs.error.list({ page: 1, limit: 50 }), '/api/v2/log/error/paginated?page=1&limit=50'],
+    ['logs.error.listBySourceAndId', () => client.logs.error.listBySourceAndId('bot-hook', 'hook-3', { page: 1, limit: 50 }), '/api/v2/log/error/bot-hook/hook-3?page=1&limit=50'],
+    ['logs.error.get', () => client.logs.error.get('err-1'), '/api/v2/log/error/err-1'],
+  ];
+
+  for (const [name, call, expectedPath] of cases) {
+    await t.test(`${name} should GET ${expectedPath}`, async () => {
+      await call();
+      const last = requests[requests.length - 1];
+      assert.strictEqual(last.method, 'GET');
+      assert.strictEqual(last.url, `https://api.sigrex.io${expectedPath}`);
+    });
+  }
+});
+
+test('Webhook share routes', async (t) => {
+  for (const kind of ['bot', 'data'] as const) {
+    await t.test(`webhooks.${kind}.createShare should POST /api/v2/webhook/${kind}/share/{id} with a signed body`, async () => {
+      let requestUrl = '';
+      let requestOptions: any;
+
+      const mockFetch = (async (url: string, options: any) => {
+        requestUrl = url;
+        requestOptions = options;
+        return {
+          ok: true,
+          status: 201,
+          statusText: 'Created',
+          headers: new Map([['content-type', 'application/json']]),
+          json: async () => ({})
+        } as any;
+      }) as typeof fetch;
+
+      const client = new SigrexClient({
+        apiKey: 'test-api-key',
+        apiSecret: 'test-api-secret',
+        fetch: mockFetch
+      });
+
+      await client.webhooks[kind].createShare('hook-1', { userId: 'user-1' });
+
+      assert.strictEqual(requestOptions.method, 'POST');
+      assert.strictEqual(requestUrl, `https://api.sigrex.io/api/v2/webhook/${kind}/share/hook-1`);
+      assert.strictEqual(requestOptions.body, '{"userId":"user-1"}');
+      const expectedSig = generateHmacSignature(
+        'test-api-secret',
+        'POST',
+        `/api/v2/webhook/${kind}/share/hook-1`,
+        requestOptions.headers['timestamp'],
+        { userId: 'user-1' }
+      );
+      assert.strictEqual(requestOptions.headers['signature'], expectedSig);
+    });
+  }
+});
