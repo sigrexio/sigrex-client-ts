@@ -20,7 +20,7 @@ export class LlmApiKeysService {
   /**
    * Get models for a specific service
    */
-  async getModels(serviceId: string | number): Promise<paths['/api/v2/api/llm/models/{serviceId}']['get']['responses']['200']['content']['application/json']> {
+  async listModels(serviceId: string | number): Promise<paths['/api/v2/api/llm/models/{serviceId}']['get']['responses']['200']['content']['application/json']> {
     return this.client.request<paths['/api/v2/api/llm/models/{serviceId}']['get']['responses']['200']['content']['application/json']>({
       method: 'GET',
       path: `/api/v2/api/llm/models/${serviceId}`,

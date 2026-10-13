@@ -33,7 +33,7 @@ export class PredictionApiKeysService {
   /**
    * Get prediction signal bots by API ID
    */
-  async getSignalBot(id: string | number, queryParams: paths['/api/v2/api/prediction/bot/signal/{id}']['get']['parameters']['query']): Promise<paths['/api/v2/api/prediction/bot/signal/{id}']['get']['responses']['200']['content']['application/json']> {
+  async listSignalBot(id: string | number, queryParams: paths['/api/v2/api/prediction/bot/signal/{id}']['get']['parameters']['query']): Promise<paths['/api/v2/api/prediction/bot/signal/{id}']['get']['responses']['200']['content']['application/json']> {
     return this.client.request<paths['/api/v2/api/prediction/bot/signal/{id}']['get']['responses']['200']['content']['application/json']>({
       method: 'GET',
       path: `/api/v2/api/prediction/bot/signal/${id}`,

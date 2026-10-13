@@ -18,3 +18,8 @@ export { DataWebhooksService } from './services/dataWebhooks.js';
 export { ExchangeApiKeysService } from './services/exchangeApiKeys.js';
 export { LlmApiKeysService } from './services/llmApiKeys.js';
 export { PredictionApiKeysService } from './services/predictionApiKeys.js';
+export { AccountService } from './services/account.js';
+export { SignalLogsService } from './services/signalLogs.js';
+export { TransactionLogsService } from './services/transactionLogs.js';
+export { DataLogsService } from './services/dataLogs.js';
+export { ErrorLogsService } from './services/errorLogs.js';

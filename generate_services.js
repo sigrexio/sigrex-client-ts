@@ -68,6 +68,31 @@ const groups = {
     prefix: '/api/v2/api/prediction',
     className: 'PredictionApiKeysService',
     fileName: 'predictionApiKeys.ts'
+  },
+  account: {
+    prefix: '/api/v2/account',
+    className: 'AccountService',
+    fileName: 'account.ts'
+  },
+  signalLogs: {
+    prefix: '/api/v2/log/signal',
+    className: 'SignalLogsService',
+    fileName: 'signalLogs.ts'
+  },
+  transactionLogs: {
+    prefix: '/api/v2/log/transaction',
+    className: 'TransactionLogsService',
+    fileName: 'transactionLogs.ts'
+  },
+  dataLogs: {
+    prefix: '/api/v2/log/data',
+    className: 'DataLogsService',
+    fileName: 'dataLogs.ts'
+  },
+  errorLogs: {
+    prefix: '/api/v2/log/error',
+    className: 'ErrorLogsService',
+    fileName: 'errorLogs.ts'
   }
 };
 
@@ -109,7 +134,10 @@ for (const [groupKey, group] of Object.entries(groups)) {
 
   for (const apiPath of groupPaths) {
     const pathObj = spec.paths[apiPath];
-    const relativePath = apiPath.substring(group.prefix.length) || '/';
+    const fullRelativePath = apiPath.substring(group.prefix.length) || '/';
+    // A trailing /paginated is named like the route without it, e.g. /hook/{hookId}/paginated -> listHook
+    const isPaginated = fullRelativePath.endsWith('/paginated');
+    const relativePath = isPaginated ? fullRelativePath.slice(0, -'/paginated'.length) || '/' : fullRelativePath;
 
     for (const [httpMethod, opObj] of Object.entries(pathObj)) {
       if (['get', 'post', 'put', 'delete', 'patch'].indexOf(httpMethod) === -1) continue;
@@ -139,10 +167,12 @@ for (const [groupKey, group] of Object.entries(groups)) {
         let prefixName = '';
         let suffixName = '';
         let hasIdParam = false;
+        const paramNames = [];
 
         for (const part of parts) {
           if (part.startsWith('{') && part.endsWith('}')) {
             hasIdParam = true;
+            paramNames.push(part.charAt(1).toUpperCase() + part.slice(2, -1));
           } else {
             const camelPart = part.replace(/[-_]([a-z])/g, (_, g) => g.toUpperCase());
             const capitalized = camelPart.charAt(0).toUpperCase() + camelPart.slice(1);
@@ -156,9 +186,14 @@ for (const [groupKey, group] of Object.entries(groups)) {
 
         if (parts[parts.length - 1].startsWith('{') && parts[parts.length - 1].endsWith('}')) {
           // Ends with an ID, like /folder/{id}
-          if (httpMethod === 'get') methodName = 'get' + suffixName + prefixName.charAt(0).toUpperCase() + prefixName.slice(1);
-          else if (httpMethod === 'put') methodName = 'update' + suffixName + prefixName.charAt(0).toUpperCase() + prefixName.slice(1);
-          else if (httpMethod === 'delete') methodName = 'delete' + suffixName + prefixName.charAt(0).toUpperCase() + prefixName.slice(1);
+          // Only params, like /{source}/{id} -> getBySourceAndId
+          const target = prefixName
+            ? suffixName + prefixName.charAt(0).toUpperCase() + prefixName.slice(1)
+            : 'By' + paramNames.join('And');
+          if (httpMethod === 'get') methodName = 'get' + target;
+          else if (httpMethod === 'post') methodName = 'create' + target;
+          else if (httpMethod === 'put') methodName = 'update' + target;
+          else if (httpMethod === 'delete') methodName = 'delete' + target;
         } else if (parts.length > 1 && parts[0].startsWith('{') && parts[0].endsWith('}')) {
           // Starts with ID, like /{id}/reset
           methodName = prefixName || suffixName;
@@ -170,6 +205,22 @@ for (const [groupKey, group] of Object.entries(groups)) {
             methodName = httpMethod + prefixName.charAt(0).toUpperCase() + prefixName.slice(1) + suffixName;
           }
         }
+      }
+
+      // GET methods are named by what they return: list* for arrays and paginated results, get* for a single item
+      if (httpMethod === 'get') {
+        const okResponse = opObj.responses['200'] || opObj.responses['201'];
+        let schema = okResponse && okResponse.content && okResponse.content['application/json'] && okResponse.content['application/json'].schema;
+        if (schema && schema.$ref) {
+          schema = spec.components.schemas[schema.$ref.split('/').pop()];
+        }
+        const hasPageParam = (opObj.parameters || []).some(p => p.in === 'query' && p.name === 'page');
+        const returnsList = hasPageParam || !!schema && (
+          schema.type === 'array' ||
+          !!(schema.properties && schema.properties.data && schema.properties.data.type === 'array')
+        );
+        const baseName = methodName.replace(/^(get|list)/, '');
+        methodName = (returnsList ? 'list' : 'get') + baseName.charAt(0).toUpperCase() + baseName.slice(1);
       }
 
       // Format method name
@@ -184,6 +235,13 @@ for (const [groupKey, group] of Object.entries(groups)) {
         }
       }
 
+      // Path parameters with an enum schema get their typed union instead of string | number
+      const enumPathParams = new Set(
+        (opObj.parameters || [])
+          .filter(p => p.in === 'path' && p.schema && p.schema.enum)
+          .map(p => p.name)
+      );
+
       // Check if there is query parameters
       const hasQuery = opObj.parameters && opObj.parameters.some(p => p.in === 'query');
       // Check if there is requestBody
@@ -192,7 +250,11 @@ for (const [groupKey, group] of Object.entries(groups)) {
       // Build method signature arguments
       const args = [];
       for (const param of pathParams) {
-        args.push(`${param}: string | number`);
+        if (enumPathParams.has(param)) {
+          args.push(`${param}: paths['${apiPath}']['${httpMethod}']['parameters']['path']['${param}']`);
+        } else {
+          args.push(`${param}: string | number`);
+        }
       }
 
       if (hasBody) {
