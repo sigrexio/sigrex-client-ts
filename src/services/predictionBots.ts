@@ -7,7 +7,7 @@ export class PredictionBotsService {
   /**
    * Get prediction market by slug
    */
-  async getMarket(exchange: string, slug: string | number): Promise<paths['/api/v2/bot/signal/prediction/market/{exchange}/{slug}']['get']['responses']['200']['content']['application/json']> {
+  async getMarket(exchange: string | number, slug: string | number): Promise<paths['/api/v2/bot/signal/prediction/market/{exchange}/{slug}']['get']['responses']['200']['content']['application/json']> {
     return this.client.request<paths['/api/v2/bot/signal/prediction/market/{exchange}/{slug}']['get']['responses']['200']['content']['application/json']>({
       method: 'GET',
       path: `/api/v2/bot/signal/prediction/market/${exchange}/${slug}`,
