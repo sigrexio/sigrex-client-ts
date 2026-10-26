@@ -31,6 +31,19 @@ export class LlmReactionsService {
       
 
   /**
+   * Get the total number of LLM Reaction
+   */
+  async getTotal(): Promise<paths['/api/v2/strategy/reaction/llm/total']['get']['responses']['200']['content']['application/json']> {
+    return this.client.request<paths['/api/v2/strategy/reaction/llm/total']['get']['responses']['200']['content']['application/json']>({
+      method: 'GET',
+      path: `/api/v2/strategy/reaction/llm/total`,
+      
+      
+    });
+  }
+      
+
+  /**
    * Get LLM reaction by ID
    */
   async get(id: string | number): Promise<paths['/api/v2/strategy/reaction/llm/{id}']['get']['responses']['200']['content']['application/json']> {
@@ -63,19 +76,6 @@ export class LlmReactionsService {
     return this.client.request<paths['/api/v2/strategy/reaction/llm/{id}']['delete']['responses']['200']['content']['application/json']>({
       method: 'DELETE',
       path: `/api/v2/strategy/reaction/llm/${id}`,
-      
-      
-    });
-  }
-      
-
-  /**
-   * Get the total number of LLM Reaction
-   */
-  async getTotal(): Promise<paths['/api/v2/strategy/reaction/llm/total']['get']['responses']['200']['content']['application/json']> {
-    return this.client.request<paths['/api/v2/strategy/reaction/llm/total']['get']['responses']['200']['content']['application/json']>({
-      method: 'GET',
-      path: `/api/v2/strategy/reaction/llm/total`,
       
       
     });

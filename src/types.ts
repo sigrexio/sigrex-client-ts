@@ -17,8 +17,12 @@ export interface paths {
                 query?: {
                     /** @description Filter by enabled status */
                     enabled?: boolean;
-                    /** @description Filter by blockchain chain ID */
+                    /** @description Filter by numeric blockchain chain ID (e.g. 137) */
                     chainId?: string;
+                    /** @description Filter by exchange type */
+                    type?: "cex" | "dex";
+                    /** @description Filter by exchange service */
+                    service?: "spot" | "futures" | "stock" | "prediction";
                 };
                 header?: never;
                 path?: never;
@@ -35,13 +39,18 @@ export interface paths {
                         "application/json": components["schemas"]["Exchange"][];
                     };
                 };
-                /** @description Internal server error */
-                500: {
+                /** @description Invalid enabled value or chain ID */
+                400: {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -78,13 +87,9 @@ export interface paths {
                         "application/json": components["schemas"]["Exchange"][];
                     };
                 };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -124,20 +129,18 @@ export interface paths {
                         "application/json": components["schemas"]["Exchange"][];
                     };
                 };
-                /** @description Missing chain ID */
+                /** @description Missing or invalid chain ID */
                 400: {
                     headers: {
                         [name: string]: unknown;
                     };
-                    content?: never;
-                };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
                     };
-                    content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -174,13 +177,9 @@ export interface paths {
                         "application/json": components["schemas"]["Exchange"][];
                     };
                 };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -217,13 +216,9 @@ export interface paths {
                         "application/json": components["schemas"]["Exchange"][];
                     };
                 };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -260,6 +255,9 @@ export interface paths {
                         "application/json": components["schemas"]["LLMSession"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -295,6 +293,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Session limit reached */
                 402: {
                     headers: {
@@ -313,6 +312,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -350,6 +351,9 @@ export interface paths {
                         };
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -373,6 +377,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description LLM session ID */
                     id: string;
                 };
                 cookie?: never;
@@ -397,7 +402,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Session not found */
+                401: components["responses"]["Unauthorized"];
+                /** @description LLM session not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -406,6 +412,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         /** Update LLM session */
@@ -414,6 +422,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description LLM session ID */
                     id: string;
                 };
                 cookie?: never;
@@ -442,6 +451,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Session, webhook, or LLM API not found */
                 404: {
                     headers: {
@@ -451,6 +461,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -460,6 +472,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description LLM session ID */
                     id: string;
                 };
                 cookie?: never;
@@ -484,7 +497,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Session not found */
+                401: components["responses"]["Unauthorized"];
+                /** @description LLM session not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -493,6 +507,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -544,6 +560,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -566,6 +585,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description LLM session ID */
                     id: string;
                 };
                 cookie?: never;
@@ -594,7 +614,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Session not found */
+                401: components["responses"]["Unauthorized"];
+                /** @description LLM session not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -603,6 +624,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -626,6 +649,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description LLM session ID */
                     id: string;
                 };
                 cookie?: never;
@@ -654,6 +678,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Active session limit reached */
                 402: {
                     headers: {
@@ -663,7 +688,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Session not found */
+                /** @description LLM session not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -672,6 +697,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -695,6 +722,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description LLM session ID */
                     id: string;
                 };
                 cookie?: never;
@@ -723,7 +751,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Session not found */
+                401: components["responses"]["Unauthorized"];
+                /** @description LLM session not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -732,6 +761,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -767,6 +798,9 @@ export interface paths {
                         "application/json": components["schemas"]["LLMSessionFolder"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -803,6 +837,9 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -837,6 +874,9 @@ export interface paths {
                         "application/json": components["schemas"]["LLMSession"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -883,6 +923,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -890,6 +931,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         /** Update LLM session folder */
@@ -930,6 +973,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -937,6 +981,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -971,6 +1017,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -978,6 +1025,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -1011,6 +1060,9 @@ export interface paths {
                         "application/json": components["schemas"]["LLMReaction"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -1046,6 +1098,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Reaction limit reached */
                 402: {
                     headers: {
@@ -1064,6 +1117,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -1101,6 +1156,9 @@ export interface paths {
                         };
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -1124,6 +1182,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description LLM reaction ID */
                     id: string;
                 };
                 cookie?: never;
@@ -1148,7 +1207,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Reaction not found */
+                401: components["responses"]["Unauthorized"];
+                /** @description LLM reaction not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -1157,6 +1217,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         /** Update LLM reaction */
@@ -1165,6 +1227,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description LLM reaction ID */
                     id: string;
                 };
                 cookie?: never;
@@ -1193,6 +1256,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Reaction, webhook, or LLM API not found */
                 404: {
                     headers: {
@@ -1202,6 +1266,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -1211,6 +1277,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description LLM reaction ID */
                     id: string;
                 };
                 cookie?: never;
@@ -1235,7 +1302,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Reaction not found */
+                401: components["responses"]["Unauthorized"];
+                /** @description LLM reaction not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -1244,6 +1312,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -1295,6 +1365,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -1317,6 +1390,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description LLM reaction ID */
                     id: string;
                 };
                 cookie?: never;
@@ -1345,7 +1419,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Reaction not found */
+                401: components["responses"]["Unauthorized"];
+                /** @description LLM reaction not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -1354,6 +1429,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -1377,6 +1454,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description LLM reaction ID */
                     id: string;
                 };
                 cookie?: never;
@@ -1405,6 +1483,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Active reaction limit reached */
                 402: {
                     headers: {
@@ -1414,7 +1493,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Reaction not found */
+                /** @description LLM reaction not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -1423,6 +1502,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -1446,6 +1527,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description LLM reaction ID */
                     id: string;
                 };
                 cookie?: never;
@@ -1474,7 +1556,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Strategy not found */
+                401: components["responses"]["Unauthorized"];
+                /** @description LLM reaction not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -1483,6 +1566,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -1518,6 +1603,9 @@ export interface paths {
                         "application/json": components["schemas"]["LLMReactionFolder"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -1554,6 +1642,9 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -1588,6 +1679,9 @@ export interface paths {
                         "application/json": components["schemas"]["LLMReaction"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -1634,6 +1728,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -1641,6 +1736,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         /** Update LLM reaction folder */
@@ -1681,6 +1778,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -1688,6 +1786,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -1722,6 +1822,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -1729,6 +1830,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -1762,6 +1865,9 @@ export interface paths {
                         "application/json": components["schemas"]["CodeReaction"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -1797,6 +1903,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Exchange, webhook, or data hook not found */
                 404: {
                     headers: {
@@ -1806,6 +1913,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -1843,6 +1952,9 @@ export interface paths {
                         };
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -1866,6 +1978,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Code reaction ID */
                     id: string;
                 };
                 cookie?: never;
@@ -1890,7 +2003,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Strategy not found */
+                401: components["responses"]["Unauthorized"];
+                /** @description Code reaction not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -1899,6 +2013,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         /** Update code reaction */
@@ -1907,6 +2023,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Code reaction ID */
                     id: string;
                 };
                 cookie?: never;
@@ -1935,6 +2052,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Reaction, exchange, webhook, or data hook not found */
                 404: {
                     headers: {
@@ -1944,6 +2062,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -1953,6 +2073,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Code reaction ID */
                     id: string;
                 };
                 cookie?: never;
@@ -1977,7 +2098,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Strategy not found */
+                401: components["responses"]["Unauthorized"];
+                /** @description Code reaction not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -1986,6 +2108,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -2037,6 +2161,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -2059,6 +2186,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Code reaction ID */
                     id: string;
                 };
                 cookie?: never;
@@ -2087,7 +2215,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Strategy not found */
+                401: components["responses"]["Unauthorized"];
+                /** @description Code reaction not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -2096,6 +2225,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -2119,6 +2250,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Code reaction ID */
                     id: string;
                 };
                 cookie?: never;
@@ -2138,7 +2270,7 @@ export interface paths {
                         "application/json": components["schemas"]["SuccessResponse"];
                     };
                 };
-                /** @description Missing id, invalid status, or reaction limit reached */
+                /** @description Missing id, missing or invalid status, or no webhook linked */
                 400: {
                     headers: {
                         [name: string]: unknown;
@@ -2147,7 +2279,17 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Strategy not found */
+                401: components["responses"]["Unauthorized"];
+                /** @description Active code reaction limit reached */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Code reaction not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -2156,6 +2298,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -2179,6 +2323,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Code reaction ID */
                     id: string;
                 };
                 cookie?: never;
@@ -2207,7 +2352,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Strategy not found */
+                401: components["responses"]["Unauthorized"];
+                /** @description Code reaction not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -2216,6 +2362,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -2241,6 +2389,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Code reaction ID */
                     id: string;
                 };
                 cookie?: never;
@@ -2265,7 +2414,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Strategy not found */
+                401: components["responses"]["Unauthorized"];
+                /** @description Code reaction not found */
                 404: {
                     headers: {
                         [name: string]: unknown;
@@ -2274,6 +2424,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -2307,6 +2459,9 @@ export interface paths {
                         "application/json": components["schemas"]["CodeReactionFolder"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -2343,6 +2498,9 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -2377,6 +2535,9 @@ export interface paths {
                         "application/json": components["schemas"]["CodeReaction"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -2423,6 +2584,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -2430,6 +2592,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         /** Update code reaction folder */
@@ -2470,6 +2634,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -2477,6 +2642,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -2511,6 +2678,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -2518,6 +2686,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -2551,6 +2721,9 @@ export interface paths {
                         "application/json": components["schemas"]["CodeStrategy"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -2586,6 +2759,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Exchange or webhook not found */
                 404: {
                     headers: {
@@ -2595,6 +2769,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -2632,6 +2808,9 @@ export interface paths {
                         };
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -2655,6 +2834,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Code strategy ID */
                     id: string;
                 };
                 cookie?: never;
@@ -2679,6 +2859,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Strategy not found */
                 404: {
                     headers: {
@@ -2688,6 +2869,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         /** Update code strategy */
@@ -2696,6 +2879,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Code strategy ID */
                     id: string;
                 };
                 cookie?: never;
@@ -2724,6 +2908,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Strategy, exchange, or webhook not found */
                 404: {
                     headers: {
@@ -2733,6 +2918,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -2742,6 +2929,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Code strategy ID */
                     id: string;
                 };
                 cookie?: never;
@@ -2766,6 +2954,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Strategy not found */
                 404: {
                     headers: {
@@ -2775,6 +2964,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -2826,6 +3017,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -2848,6 +3042,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Code strategy ID */
                     id: string;
                 };
                 cookie?: never;
@@ -2876,6 +3071,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Strategy not found */
                 404: {
                     headers: {
@@ -2885,6 +3081,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -2908,6 +3106,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Code strategy ID */
                     id: string;
                 };
                 cookie?: never;
@@ -2936,6 +3135,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Strategy not found */
                 404: {
                     headers: {
@@ -2945,6 +3145,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -2968,6 +3170,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Code strategy ID */
                     id: string;
                 };
                 cookie?: never;
@@ -2996,6 +3199,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Strategy not found */
                 404: {
                     headers: {
@@ -3005,6 +3209,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -3030,6 +3236,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Code strategy ID */
                     id: string;
                 };
                 cookie?: never;
@@ -3054,6 +3261,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Strategy not found */
                 404: {
                     headers: {
@@ -3063,6 +3271,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -3096,6 +3306,9 @@ export interface paths {
                         "application/json": components["schemas"]["CodeStrategyFolder"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -3132,6 +3345,9 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -3166,6 +3382,9 @@ export interface paths {
                         "application/json": components["schemas"]["CodeStrategy"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -3212,6 +3431,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -3219,6 +3439,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         /** Update code strategy folder */
@@ -3259,6 +3481,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -3266,6 +3489,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -3300,6 +3525,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -3307,6 +3533,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -3340,6 +3568,9 @@ export interface paths {
                         "application/json": components["schemas"]["CexSignalBot"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -3375,6 +3606,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description API or webhook not found */
                 404: {
                     headers: {
@@ -3384,6 +3616,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -3421,6 +3655,9 @@ export interface paths {
                         };
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -3444,6 +3681,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description CEX signal bot ID */
                     id: string;
                 };
                 cookie?: never;
@@ -3468,6 +3706,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Bot not found */
                 404: {
                     headers: {
@@ -3477,6 +3716,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         /** Update CEX signal bot */
@@ -3485,6 +3726,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description CEX signal bot ID */
                     id: string;
                 };
                 cookie?: never;
@@ -3513,6 +3755,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Bot, API key, or webhook not found */
                 404: {
                     headers: {
@@ -3522,6 +3765,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -3531,6 +3776,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description CEX signal bot ID */
                     id: string;
                 };
                 cookie?: never;
@@ -3555,6 +3801,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Bot not found */
                 404: {
                     headers: {
@@ -3564,6 +3811,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -3585,6 +3834,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description CEX signal bot ID */
                     id: string;
                 };
                 cookie?: never;
@@ -3613,6 +3863,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Bot limit reached */
                 402: {
                     headers: {
@@ -3631,6 +3882,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -3684,6 +3937,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Bot or webhook not found */
                 404: {
                     headers: {
@@ -3693,6 +3947,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -3727,6 +3983,9 @@ export interface paths {
                         "application/json": components["schemas"]["CexSignalBotFolder"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -3763,6 +4022,9 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -3797,6 +4059,9 @@ export interface paths {
                         "application/json": components["schemas"]["CexSignalBot"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -3843,6 +4108,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -3850,6 +4116,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         /** Update CEX signal bot folder */
@@ -3890,6 +4158,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -3897,6 +4166,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -3931,6 +4202,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -3938,6 +4210,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -3960,6 +4234,7 @@ export interface paths {
                 path: {
                     /** @description Prediction market exchange */
                     exchange: string;
+                    /** @description The prediction market slug */
                     slug: string;
                 };
                 cookie?: never;
@@ -3984,6 +4259,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -4020,6 +4298,9 @@ export interface paths {
                         "application/json": components["schemas"]["PredictionSignalBot"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -4055,6 +4336,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description API key or webhook not found */
                 404: {
                     headers: {
@@ -4064,6 +4346,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -4101,6 +4385,9 @@ export interface paths {
                         };
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -4124,6 +4411,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Prediction signal bot ID */
                     id: string;
                 };
                 cookie?: never;
@@ -4148,6 +4436,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Bot not found */
                 404: {
                     headers: {
@@ -4157,6 +4446,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         /** Update prediction signal bot */
@@ -4165,6 +4456,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Prediction signal bot ID */
                     id: string;
                 };
                 cookie?: never;
@@ -4193,6 +4485,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Bot, API key, or webhook not found */
                 404: {
                     headers: {
@@ -4202,6 +4495,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -4211,6 +4506,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Prediction signal bot ID */
                     id: string;
                 };
                 cookie?: never;
@@ -4235,6 +4531,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Bot not found */
                 404: {
                     headers: {
@@ -4244,6 +4541,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -4265,6 +4564,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Prediction signal bot ID */
                     id: string;
                 };
                 cookie?: never;
@@ -4293,6 +4593,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Bot limit exceeded */
                 402: {
                     headers: {
@@ -4311,6 +4612,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -4364,6 +4667,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Bot or webhook not found */
                 404: {
                     headers: {
@@ -4373,6 +4677,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -4407,6 +4713,9 @@ export interface paths {
                         "application/json": components["schemas"]["PredictionSignalBotFolder"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -4443,6 +4752,9 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -4477,6 +4789,9 @@ export interface paths {
                         "application/json": components["schemas"]["PredictionSignalBot"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -4523,6 +4838,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -4530,6 +4846,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         /** Update prediction signal bot folder */
@@ -4570,6 +4888,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -4577,6 +4896,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -4611,6 +4932,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -4618,6 +4940,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -4651,6 +4975,9 @@ export interface paths {
                         "application/json": components["schemas"]["DexSignalBot"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -4686,6 +5013,16 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                /** @description DEX signal bot limit reached */
+                402: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
                 /** @description Factory or webhook not found */
                 404: {
                     headers: {
@@ -4695,6 +5032,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -4732,6 +5071,9 @@ export interface paths {
                         };
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -4755,6 +5097,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description DEX signal bot ID */
                     id: string;
                 };
                 cookie?: never;
@@ -4779,6 +5122,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Bot not found */
                 404: {
                     headers: {
@@ -4788,6 +5132,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         /** Update DEX signal bot */
@@ -4796,6 +5142,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description DEX signal bot ID */
                     id: string;
                 };
                 cookie?: never;
@@ -4824,6 +5171,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Bot or webhook not found */
                 404: {
                     headers: {
@@ -4833,6 +5181,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -4842,6 +5192,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description DEX signal bot ID */
                     id: string;
                 };
                 cookie?: never;
@@ -4866,6 +5217,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Bot not found */
                 404: {
                     headers: {
@@ -4875,6 +5227,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -4895,7 +5249,9 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description The blockchain chain ID */
                     chainId: string;
+                    /** @description The contract address */
                     address: string;
                 };
                 cookie?: never;
@@ -4920,6 +5276,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Bot not found */
                 404: {
                     headers: {
@@ -4929,6 +5286,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -4952,7 +5311,9 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description The blockchain chain ID */
                     chainId: string;
+                    /** @description The exchange ID */
                     exchangeId: string;
                 };
                 cookie?: never;
@@ -4977,6 +5338,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Factory not found */
                 404: {
                     headers: {
@@ -4986,6 +5348,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -5010,6 +5374,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description DEX signal bot ID */
                     id: string;
                 };
                 cookie?: never;
@@ -5038,6 +5403,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description DEX bot limit reached */
                 402: {
                     headers: {
@@ -5056,6 +5422,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -5091,6 +5459,9 @@ export interface paths {
                         "application/json": components["schemas"]["DexSignalBotFolder"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -5127,6 +5498,9 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -5161,6 +5535,9 @@ export interface paths {
                         "application/json": components["schemas"]["DexSignalBot"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -5207,6 +5584,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -5214,6 +5592,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         /** Update DEX signal bot folder */
@@ -5254,6 +5634,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -5261,6 +5642,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -5295,6 +5678,7 @@ export interface paths {
                     };
                     content?: never;
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Folder not found */
                 404: {
                     headers: {
@@ -5302,6 +5686,8 @@ export interface paths {
                     };
                     content?: never;
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -5335,6 +5721,9 @@ export interface paths {
                         "application/json": components["schemas"]["BotWebhook"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -5370,6 +5759,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Webhook limit reached */
                 402: {
                     headers: {
@@ -5388,6 +5778,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -5409,6 +5801,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Bot webhook ID */
                     id: string;
                 };
                 cookie?: never;
@@ -5433,6 +5826,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Bot webhook not found */
                 404: {
                     headers: {
@@ -5442,6 +5836,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         /** Update bot webhook */
@@ -5450,6 +5846,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Bot webhook ID */
                     id: string;
                 };
                 cookie?: never;
@@ -5478,6 +5875,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Webhook not found */
                 404: {
                     headers: {
@@ -5487,6 +5885,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -5496,6 +5896,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Bot webhook ID */
                     id: string;
                 };
                 cookie?: never;
@@ -5520,6 +5921,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Webhook not found */
                 404: {
                     headers: {
@@ -5538,6 +5940,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -5558,6 +5962,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Bot webhook ID */
                     id: string;
                 };
                 cookie?: never;
@@ -5582,6 +5987,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -5607,6 +6015,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Bot webhook ID */
                     id: string;
                 };
                 cookie?: never;
@@ -5635,6 +6044,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Webhook not found */
                 404: {
                     headers: {
@@ -5644,6 +6054,17 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                /** @description Webhook already shared with this user */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         /** Remove webhook share */
@@ -5652,6 +6073,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Bot webhook ID */
                     id: string;
                 };
                 cookie?: never;
@@ -5683,6 +6105,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Webhook not found */
                 404: {
                     headers: {
@@ -5692,6 +6115,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -5710,12 +6135,14 @@ export interface paths {
         get: {
             parameters: {
                 query: {
+                    /** @description Page number (1-indexed) */
                     page: number;
                     /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
                 };
                 header?: never;
                 path: {
+                    /** @description Bot webhook ID */
                     id: string;
                 };
                 cookie?: never;
@@ -5740,6 +6167,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -5761,12 +6191,14 @@ export interface paths {
         get: {
             parameters: {
                 query: {
+                    /** @description Page number (1-indexed) */
                     page: number;
                     /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
                 };
                 header?: never;
                 path: {
+                    /** @description Bot webhook ID */
                     id: string;
                 };
                 cookie?: never;
@@ -5791,6 +6223,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -5812,12 +6247,14 @@ export interface paths {
         get: {
             parameters: {
                 query: {
+                    /** @description Page number (1-indexed) */
                     page: number;
                     /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
                 };
                 header?: never;
                 path: {
+                    /** @description Bot webhook ID */
                     id: string;
                 };
                 cookie?: never;
@@ -5842,6 +6279,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -5866,6 +6306,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Bot webhook ID */
                     id: string;
                 };
                 cookie?: never;
@@ -5894,6 +6335,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Webhook limit reached */
                 402: {
                     headers: {
@@ -5912,6 +6354,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -5947,6 +6391,9 @@ export interface paths {
                         "application/json": components["schemas"]["SharedWebhook"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -5994,6 +6441,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Friendship not found */
                 404: {
                     headers: {
@@ -6003,6 +6451,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -6050,6 +6500,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Friendship not found */
                 404: {
                     headers: {
@@ -6059,6 +6510,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -6095,6 +6548,9 @@ export interface paths {
                         "application/json": components["schemas"]["DataWebhook"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -6130,6 +6586,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Webhook limit reached */
                 402: {
                     headers: {
@@ -6148,6 +6605,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -6169,6 +6628,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Data webhook ID */
                     id: string;
                 };
                 cookie?: never;
@@ -6193,6 +6653,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Webhook not found */
                 404: {
                     headers: {
@@ -6202,6 +6663,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         /** Update data webhook */
@@ -6210,6 +6673,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Data webhook ID */
                     id: string;
                 };
                 cookie?: never;
@@ -6238,6 +6702,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Webhook not found */
                 404: {
                     headers: {
@@ -6247,6 +6712,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -6256,6 +6723,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Data webhook ID */
                     id: string;
                 };
                 cookie?: never;
@@ -6280,6 +6748,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Webhook not found */
                 404: {
                     headers: {
@@ -6298,6 +6767,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -6318,6 +6789,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Data webhook ID */
                     id: string;
                 };
                 cookie?: never;
@@ -6342,6 +6814,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -6363,12 +6838,14 @@ export interface paths {
         get: {
             parameters: {
                 query: {
+                    /** @description Page number (1-indexed) */
                     page: number;
                     /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
                 };
                 header?: never;
                 path: {
+                    /** @description Data webhook ID */
                     id: string;
                 };
                 cookie?: never;
@@ -6393,6 +6870,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -6414,12 +6894,14 @@ export interface paths {
         get: {
             parameters: {
                 query: {
+                    /** @description Page number (1-indexed) */
                     page: number;
                     /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
                 };
                 header?: never;
                 path: {
+                    /** @description Data webhook ID */
                     id: string;
                 };
                 cookie?: never;
@@ -6444,6 +6926,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -6469,6 +6954,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Data webhook ID */
                     id: string;
                 };
                 cookie?: never;
@@ -6497,6 +6983,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Webhook not found */
                 404: {
                     headers: {
@@ -6506,6 +6993,17 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                /** @description Webhook already shared with this user */
+                409: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         /** Remove webhook share */
@@ -6514,6 +7012,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Data webhook ID */
                     id: string;
                 };
                 cookie?: never;
@@ -6545,6 +7044,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Webhook not found */
                 404: {
                     headers: {
@@ -6554,6 +7054,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -6575,6 +7077,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Data webhook ID */
                     id: string;
                 };
                 cookie?: never;
@@ -6603,6 +7106,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Webhook limit reached */
                 402: {
                     headers: {
@@ -6621,6 +7125,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -6656,6 +7162,9 @@ export interface paths {
                         "application/json": components["schemas"]["SharedDataWebhook"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -6703,6 +7212,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Friendship not found */
                 404: {
                     headers: {
@@ -6712,6 +7222,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -6759,6 +7271,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Friendship not found */
                 404: {
                     headers: {
@@ -6768,6 +7281,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -6785,7 +7300,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get all exchange API keys for user */
+        /**
+         * Get all exchange API keys for user
+         * @description List of the user's exchange API keys. Secret and private keys are never returned.
+         */
         get: {
             parameters: {
                 query?: never;
@@ -6804,6 +7322,9 @@ export interface paths {
                         "application/json": components["schemas"]["ExchangeApiKey"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -6839,6 +7360,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Exchange not found */
                 404: {
                     headers: {
@@ -6848,6 +7370,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -6867,12 +7391,14 @@ export interface paths {
         get: {
             parameters: {
                 query: {
+                    /** @description Page number (1-indexed) */
                     page: number;
                     /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
                 };
                 header?: never;
                 path: {
+                    /** @description Exchange API key ID */
                     id: string;
                 };
                 cookie?: never;
@@ -6897,6 +7423,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -6921,6 +7450,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Exchange API key ID */
                     id: string;
                 };
                 cookie?: never;
@@ -6949,6 +7479,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description API key not found */
                 404: {
                     headers: {
@@ -6958,6 +7489,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -6983,6 +7516,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Exchange API key ID */
                     id: string;
                 };
                 cookie?: never;
@@ -7007,6 +7541,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description API key not found */
                 404: {
                     headers: {
@@ -7025,6 +7560,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -7061,7 +7598,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TestResponse"];
+                        "application/json": components["schemas"]["SuccessResponse"];
                     };
                 };
                 /** @description Missing required fields or invalid credentials */
@@ -7070,9 +7607,10 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["TestResponse"];
+                        "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Exchange not found */
                 404: {
                     headers: {
@@ -7082,6 +7620,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -7116,6 +7656,9 @@ export interface paths {
                         "application/json": components["schemas"]["LLMService"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -7139,6 +7682,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description The LLM service ID */
                     serviceId: string;
                 };
                 cookie?: never;
@@ -7163,6 +7707,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -7187,6 +7734,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description LLM API key ID */
                     id: string;
                 };
                 cookie?: never;
@@ -7215,6 +7763,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description API key or model not found */
                 404: {
                     headers: {
@@ -7224,6 +7773,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -7240,7 +7791,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get all LLM API keys for user */
+        /**
+         * Get all LLM API keys for user
+         * @description List of the user's LLM API keys. Secret and private keys are never returned.
+         */
         get: {
             parameters: {
                 query?: never;
@@ -7259,6 +7813,9 @@ export interface paths {
                         "application/json": components["schemas"]["LLMApiKey"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -7294,6 +7851,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Service or model not found */
                 404: {
                     headers: {
@@ -7303,6 +7861,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -7327,6 +7887,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description LLM API key ID */
                     id: string;
                 };
                 cookie?: never;
@@ -7351,6 +7912,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -7365,7 +7929,10 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get all prediction API keys */
+        /**
+         * Get all prediction API keys
+         * @description List of the user's prediction API keys. Secret and private keys are never returned.
+         */
         get: {
             parameters: {
                 query?: never;
@@ -7384,6 +7951,9 @@ export interface paths {
                         "application/json": components["schemas"]["PredictionApiKey"][];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -7419,6 +7989,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Exchange not found */
                 404: {
                     headers: {
@@ -7428,6 +7999,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -7447,12 +8020,14 @@ export interface paths {
         get: {
             parameters: {
                 query: {
+                    /** @description Page number (1-indexed) */
                     page: number;
                     /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
                 };
                 header?: never;
                 path: {
+                    /** @description Prediction API key ID */
                     id: string;
                 };
                 cookie?: never;
@@ -7480,6 +8055,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -7504,6 +8082,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Prediction API key ID */
                     id: string;
                 };
                 cookie?: never;
@@ -7532,6 +8111,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description API key not found */
                 404: {
                     headers: {
@@ -7541,6 +8121,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         post?: never;
@@ -7566,6 +8148,7 @@ export interface paths {
                 query?: never;
                 header?: never;
                 path: {
+                    /** @description Prediction API key ID */
                     id: string;
                 };
                 cookie?: never;
@@ -7578,7 +8161,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": string;
+                        "application/json": components["schemas"]["SuccessResponse"];
                     };
                 };
                 /** @description Missing API ID */
@@ -7590,6 +8173,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description API key not found */
                 404: {
                     headers: {
@@ -7608,6 +8192,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         options?: never;
@@ -7644,18 +8230,30 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": boolean;
+                        "application/json": components["schemas"]["SuccessResponse"];
                     };
                 };
-                /** @description Missing required fields, invalid credentials, or exchange not found */
+                /** @description Missing required fields or invalid credentials */
                 400: {
                     headers: {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": boolean | components["schemas"]["ErrorResponse"];
+                        "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
+                /** @description Exchange not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         delete?: never;
@@ -7690,13 +8288,9 @@ export interface paths {
                         "application/json": components["schemas"]["Account"];
                     };
                 };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -7748,13 +8342,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -7776,6 +8366,7 @@ export interface paths {
         get: {
             parameters: {
                 query: {
+                    /** @description Page number (1-indexed) */
                     page: number;
                     /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
@@ -7812,13 +8403,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -7843,6 +8430,7 @@ export interface paths {
         get: {
             parameters: {
                 query: {
+                    /** @description Page number (1-indexed) */
                     page: number;
                     /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
@@ -7874,13 +8462,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -7902,6 +8486,7 @@ export interface paths {
         get: {
             parameters: {
                 query: {
+                    /** @description Page number (1-indexed) */
                     page: number;
                     /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
@@ -7933,13 +8518,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -7961,6 +8542,7 @@ export interface paths {
         get: {
             parameters: {
                 query: {
+                    /** @description Page number (1-indexed) */
                     page: number;
                     /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
@@ -7995,6 +8577,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Hook not found */
                 404: {
                     headers: {
@@ -8004,13 +8587,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -8032,6 +8610,7 @@ export interface paths {
         get: {
             parameters: {
                 query: {
+                    /** @description Page number (1-indexed) */
                     page: number;
                     /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
@@ -8066,13 +8645,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -8094,6 +8669,7 @@ export interface paths {
         get: {
             parameters: {
                 query: {
+                    /** @description Page number (1-indexed) */
                     page: number;
                     /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
@@ -8130,13 +8706,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -8158,6 +8730,7 @@ export interface paths {
         get: {
             parameters: {
                 query: {
+                    /** @description Page number (1-indexed) */
                     page: number;
                     /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
@@ -8189,13 +8762,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -8217,6 +8786,7 @@ export interface paths {
         get: {
             parameters: {
                 query: {
+                    /** @description Page number (1-indexed) */
                     page: number;
                     /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
@@ -8255,13 +8825,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -8310,6 +8876,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Transaction log not found */
                 404: {
                     headers: {
@@ -8319,13 +8886,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -8347,6 +8909,7 @@ export interface paths {
         get: {
             parameters: {
                 query: {
+                    /** @description Page number (1-indexed) */
                     page: number;
                     /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
@@ -8378,13 +8941,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -8406,6 +8965,7 @@ export interface paths {
         get: {
             parameters: {
                 query: {
+                    /** @description Page number (1-indexed) */
                     page: number;
                     /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
@@ -8440,6 +9000,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Hook not found */
                 404: {
                     headers: {
@@ -8449,13 +9010,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -8477,6 +9033,7 @@ export interface paths {
         get: {
             parameters: {
                 query: {
+                    /** @description Page number (1-indexed) */
                     page: number;
                     /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
@@ -8508,13 +9065,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -8536,6 +9089,7 @@ export interface paths {
         get: {
             parameters: {
                 query: {
+                    /** @description Page number (1-indexed) */
                     page: number;
                     /** @description Page size, max 100 (larger values are capped to 100) */
                     limit: number;
@@ -8572,13 +9126,9 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
+                401: components["responses"]["Unauthorized"];
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -8627,6 +9177,7 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
+                401: components["responses"]["Unauthorized"];
                 /** @description Error log not found */
                 404: {
                     headers: {
@@ -8636,13 +9187,8 @@ export interface paths {
                         "application/json": components["schemas"]["ErrorResponse"];
                     };
                 };
-                /** @description Internal server error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content?: never;
-                };
+                429: components["responses"]["RateLimited"];
+                500: components["responses"]["InternalError"];
             };
         };
         put?: never;
@@ -8667,6 +9213,7 @@ export interface components {
         };
         UpdateStatusRequest: {
             /**
+             * @description The new status to set for the resource
              * @example ACTIVE
              * @enum {string}
              */
@@ -8691,9 +9238,15 @@ export interface components {
              * @example My API Key
              */
             name?: string;
-            /** @example mx0vglashYu7egJuhnN0 */
+            /**
+             * @description The public API key provided by the exchange
+             * @example mx0vglashYu7egJuhnN0
+             */
             publicKey: string;
-            /** @example 745c547aSBp89bs450fb1dfacf86af8ed32 */
+            /**
+             * @description The private/secret API key provided by the exchange
+             * @example 745c547aSBp89bs450fb1dfacf86af8ed32
+             */
             privateKey: string;
             /**
              * @description Some extra value if required, depends on the exchange
@@ -8707,15 +9260,21 @@ export interface components {
              * @example 1
              */
             exchangeId: number;
-            /** @example mx0vglashYu7egJuhnN0 */
+            /**
+             * @description The public API key provided by the exchange
+             * @example mx0vglashYu7egJuhnN0
+             */
             publicKey: string;
-            /** @example 745c547aSBp89bs450fb1dfacf86af8ed32 */
+            /**
+             * @description The private/secret API key provided by the exchange
+             * @example 745c547aSBp89bs450fb1dfacf86af8ed32
+             */
             privateKey: string;
             /**
              * @description Some extra value if required, depends on the exchange
              * @example Bd8r9sf97rLqZ7
              */
-            extra?: Record<string, never>;
+            extra?: string;
         };
         UpdateModelRequest: {
             /**
@@ -8740,7 +9299,10 @@ export interface components {
              * @example 5
              */
             modelId: number;
-            /** @example 745c547aSBp89bs450fb1dfacf86af8ed32 */
+            /**
+             * @description The API key for the LLM service
+             * @example 745c547aSBp89bs450fb1dfacf86af8ed32
+             */
             apiKey: string;
         };
         CreatePredictionApiKeyRequest: {
@@ -8775,7 +9337,7 @@ export interface components {
              * @description PolyMarket platform funder address
              * @example 0x0fca5sdvv94baa59a362a83sdf31d9c4a25970effe68
              */
-            funderAddress: number;
+            funderAddress: string;
             /**
              * @description Signer wallet private key
              * @example dfgsdfgsdfmnc3n39745c547aSBp89bs450fb1dfacf86af8ed32
@@ -8824,7 +9386,7 @@ export interface components {
              */
             amount_from_signal: boolean;
             /**
-             * @description The amount to trade (if amount_from_signal is false)
+             * @description Real trade size of each order, placed with live funds. In quote currency if is_quote is true, otherwise base currency. Used only if amount_from_signal is false.
              * @example 150
              */
             amount?: number;
@@ -8881,7 +9443,7 @@ export interface components {
              */
             amount_from_signal: boolean;
             /**
-             * @description The amount to trade (if amount_from_signal is false)
+             * @description Real trade size of each order, placed with live funds. In quote currency if is_quote is true, otherwise base currency. Used only if amount_from_signal is false.
              * @example 150
              */
             amount?: number;
@@ -9002,7 +9564,7 @@ export interface components {
              */
             amount_from_signal: boolean;
             /**
-             * @description The amount of the bot in USDC (if amount_from_signal is false)
+             * @description Real trade size of each order in USDC, placed with live funds. Used only if amount_from_signal is false.
              * @example 100
              */
             amount?: number;
@@ -9049,7 +9611,7 @@ export interface components {
              */
             amount_from_signal: boolean;
             /**
-             * @description The amount of the bot in USDC (if amount_from_signal is false)
+             * @description Real trade size of each order in USDC, placed with live funds. Used only if amount_from_signal is false.
              * @example 100
              */
             amount?: number;
@@ -9891,10 +10453,6 @@ export interface components {
         SignalBots: {
             [key: string]: unknown;
         };
-        /** @description Stub schema for missing ref TestResponse */
-        TestResponse: {
-            [key: string]: unknown;
-        };
         /** @description Stub schema for missing ref LLMService */
         LLMService: {
             [key: string]: unknown;
@@ -9936,7 +10494,35 @@ export interface components {
             [key: string]: unknown;
         };
     };
-    responses: never;
+    responses: {
+        /** @description Missing or invalid credentials (API key, timestamp, signature, IP, permissions or bearer token) */
+        Unauthorized: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["ErrorResponse"];
+            };
+        };
+        /** @description Rate limit exceeded */
+        RateLimited: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["ErrorResponse"];
+            };
+        };
+        /** @description Internal server error */
+        InternalError: {
+            headers: {
+                [name: string]: unknown;
+            };
+            content: {
+                "application/json": components["schemas"]["ErrorResponse"];
+            };
+        };
+    };
     parameters: never;
     requestBodies: never;
     headers: never;
