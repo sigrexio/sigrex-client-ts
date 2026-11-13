@@ -4226,15 +4226,18 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get prediction market by slug */
+        /**
+         * Get prediction market by slug
+         * @description Resolves a market or an event. An event with several markets is returned with its markets to choose from and no single market chosen.
+         */
         get: {
             parameters: {
                 query?: never;
                 header?: never;
                 path: {
-                    /** @description Prediction market exchange */
+                    /** @description Prediction market exchange (polymarket, outcome or kalshi) */
                     exchange: string;
-                    /** @description The prediction market slug */
+                    /** @description Polymarket market or event slug, Kalshi market or event ticker, or Outcome.xyz event id (e.g. q199, o30154) or market id (e.g. 1481) */
                     slug: string;
                 };
                 cookie?: never;
@@ -5863,7 +5866,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["SuccessResponse"];
+                        "application/json": components["schemas"]["BotWebhook"];
                     };
                 };
                 /** @description Missing webhook id or invalid password */
@@ -8618,7 +8621,7 @@ export interface paths {
                 header?: never;
                 path: {
                     /** @description Signal source */
-                    source: "webhook" | "email" | "telegram" | "llm-session" | "code-strategy" | "llm-reaction" | "code-reaction";
+                    source: "webhook" | "email" | "telegram" | "llm-session" | "code-strategy" | "llm-reaction" | "code-reaction" | "mcp";
                 };
                 cookie?: never;
             };
@@ -8677,7 +8680,7 @@ export interface paths {
                 header?: never;
                 path: {
                     /** @description Signal source */
-                    source: "webhook" | "email" | "telegram" | "llm-session" | "code-strategy" | "llm-reaction" | "code-reaction";
+                    source: "webhook" | "email" | "telegram" | "llm-session" | "code-strategy" | "llm-reaction" | "code-reaction" | "mcp";
                     /** @description Id of the signal source */
                     id: string;
                 };
@@ -9305,6 +9308,7 @@ export interface components {
              */
             apiKey: string;
         };
+        /** @description Polymarket / Outcome require funderAddress + walletPrivateKey, Kalshi requires publicKey (API key ID) + privateKey (PEM) */
         CreatePredictionApiKeyRequest: {
             /**
              * @description The name of the API key max 255 characters
@@ -9317,16 +9321,29 @@ export interface components {
              */
             exchangeId: number;
             /**
-             * @description PolyMarket platform funder address
+             * @description Polymarket profile (deposit) address, or your main Hyperliquid wallet address for Outcome.xyz (Polymarket / Outcome.xyz only)
              * @example 0x0fca5sdvv94baa59a362a83sdf31d9c4a25970effe68
              */
-            funderAddress: string;
+            funderAddress?: string;
             /**
-             * @description Signer wallet private key
+             * @description Polymarket: the private key of the wallet that owns the account, only used to create a session key and never stored. Outcome.xyz: the private key of a Hyperliquid API wallet (Polymarket / Outcome.xyz only)
              * @example dfgsdfgsdfmnc3n39745c547aSBp89bs450fb1dfacf86af8ed32
              */
-            walletPrivateKey: string;
+            walletPrivateKey?: string;
+            /**
+             * @description Kalshi API key ID (Kalshi only, replaces funderAddress / walletPrivateKey)
+             * @example a952bcbe-ec3b-4b5b-b8f9-11dae589608c
+             */
+            publicKey?: string;
+            /**
+             * @description Kalshi API private key in PEM format, RSA or Ed25519 (Kalshi only)
+             * @example -----BEGIN PRIVATE KEY-----
+             *     ...
+             *     -----END PRIVATE KEY-----
+             */
+            privateKey?: string;
         };
+        /** @description Polymarket / Outcome require funderAddress + walletPrivateKey, Kalshi requires publicKey (API key ID) + privateKey (PEM) */
         TestPredictionApiKeyRequest: {
             /**
              * @description The id of a Exchange
@@ -9334,15 +9351,27 @@ export interface components {
              */
             exchangeId: number;
             /**
-             * @description PolyMarket platform funder address
+             * @description Polymarket profile (deposit) address, or your main Hyperliquid wallet address for Outcome.xyz (Polymarket / Outcome.xyz only)
              * @example 0x0fca5sdvv94baa59a362a83sdf31d9c4a25970effe68
              */
-            funderAddress: string;
+            funderAddress?: string;
             /**
-             * @description Signer wallet private key
+             * @description Polymarket: the private key of the wallet that owns the account, only used to create a session key and never stored. Outcome.xyz: the private key of a Hyperliquid API wallet (Polymarket / Outcome.xyz only)
              * @example dfgsdfgsdfmnc3n39745c547aSBp89bs450fb1dfacf86af8ed32
              */
-            walletPrivateKey: string;
+            walletPrivateKey?: string;
+            /**
+             * @description Kalshi API key ID (Kalshi only, replaces funderAddress / walletPrivateKey)
+             * @example a952bcbe-ec3b-4b5b-b8f9-11dae589608c
+             */
+            publicKey?: string;
+            /**
+             * @description Kalshi API private key in PEM format, RSA or Ed25519 (Kalshi only)
+             * @example -----BEGIN PRIVATE KEY-----
+             *     ...
+             *     -----END PRIVATE KEY-----
+             */
+            privateKey?: string;
         };
         CreateCexSignalBotRequest: {
             /**
@@ -9554,17 +9583,17 @@ export interface components {
              */
             slug_from_signal: boolean;
             /**
-             * @description The market url (required if slug_from_signal is false)
+             * @description The market URL (required if slug_from_signal is false). An event URL with several markets has to point to one of them: Polymarket /event/<event>/<market>, Kalshi ?market=<TICKER>, Outcome.xyz ?outcome=<market id>. Closed or settled markets are rejected.
              * @example https://polymarket.com/event/elon-musk-of-tweets-april-21-april-28/elon-musk-of-tweets-april-21-april-28-180-199#xpkQ2pz
              */
             url?: string;
             /**
-             * @description Set if amount is coming from signal
+             * @description Take the size from each signal's size field: BUY in USDC (USD on Kalshi), SELL in shares (capped at the held position). Signals without a size are ignored.
              * @example false
              */
             amount_from_signal: boolean;
             /**
-             * @description Real trade size of each order in USDC, placed with live funds. Used only if amount_from_signal is false.
+             * @description Buy size of each order in USDC (USD on Kalshi), placed with live funds. Used only if amount_from_signal is false. A SELL closes the whole position of the outcome.
              * @example 100
              */
             amount?: number;
@@ -9601,17 +9630,17 @@ export interface components {
              */
             slug_from_signal: boolean;
             /**
-             * @description The market url (required if slug_from_signal is false)
+             * @description The market URL (required if slug_from_signal is false). An event URL with several markets has to point to one of them: Polymarket /event/<event>/<market>, Kalshi ?market=<TICKER>, Outcome.xyz ?outcome=<market id>. Closed or settled markets are rejected.
              * @example https://polymarket.com/event/elon-musk-of-tweets-april-21-april-28/elon-musk-of-tweets-april-21-april-28-180-199#xpkQ2pz
              */
             url?: string;
             /**
-             * @description Set if amount is coming from signal
+             * @description Take the size from each signal's size field: BUY in USDC (USD on Kalshi), SELL in shares (capped at the held position). Signals without a size are ignored.
              * @example false
              */
             amount_from_signal: boolean;
             /**
-             * @description Real trade size of each order in USDC, placed with live funds. Used only if amount_from_signal is false.
+             * @description Buy size of each order in USDC (USD on Kalshi), placed with live funds. Used only if amount_from_signal is false. A SELL closes the whole position of the outcome.
              * @example 100
              */
             amount?: number;
